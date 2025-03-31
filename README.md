@@ -6,7 +6,7 @@ This repository contains lab assignments for the **Second Year (SE) Computer Eng
 
 ### 📚 3rd Semester
 - **DSL** (Data Structures Laboratory)
-- **OPPCGL** (Object-Oriented Programming and Computer Graphics Laboratory)
+- **OOPCGL** (Object-Oriented Programming and Computer Graphics Laboratory)
 
 ### 📚 4th Semester
 - **DSAL** (Data Structures and Algorithms Laboratory)
