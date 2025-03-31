@@ -10,23 +10,16 @@ This repository contains lab assignments for the **Second Year (SE) Computer Eng
 
 ### 📚 4th Semester
 - **DSAL** (Data Structures and Algorithms Laboratory)
+- **MPL** (Microprocessor Laboratory)
 
 ## 📂 Repository Structure
 ```
 SE-Lab-Assignments/
 │── 3rd-Sem/
 │   │── DSL/
-│   │   ├── Assignment1/
-│   │   ├── Assignment2/
-│   │   └── ...
 │   │── OPPCGL/
-│   │   ├── Assignment1/
-│   │   ├── Assignment2/
-│   │   └── ...
 │── 4th-Sem/
 │   │── DSAL/
-│   │   ├── Assignment1/
-│   │   ├── Assignment2/
-│   │   └── ...
+│   │── MPL/
 │── README.md
 ```

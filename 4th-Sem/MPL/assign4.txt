@@ -1,0 +1,230 @@
+assign4
+
+%macro scall 3
+        mov rax,%1
+        mov rdi,%1
+        mov rsi,%2
+        mov rdx,%3
+        syscall
+%endmacro
+section .data
+
+    menu db "****Menu****",10d,13d
+    db "1.Addition" ,10d,13d
+    db "2.Subtraction" ,10d,13d
+    db "3.Multiplication" ,10d,13d
+    db "4.Division" ,10d,13d
+    db "5.AND" ,10d,13d
+    db "6.OR" ,10d,13d
+    db "7.EX-OR" ,10d,13d
+    db "8.Exit" ,10d,13d
+    len equ $-menu
+
+    m0 db " ",10d,13d
+    m0_len equ $-m0
+    m1 db "Enter the choice:",10d,13d
+    m1_len equ $-m1
+    m2 db "The numbers are:",10d,13d
+    m2_len equ $-m2
+    m3 db "Addition of numbers:",10d,13d
+    m3_len equ $-m3
+    m4 db "Subtraction of numbers:",10d,13d
+    m4_len equ $-m4
+    m5 db "Multiplication of numbers:",10d,13d
+    m5_len equ $-m5
+    m6 db "Division of numbers:",10d,13d
+    m6_len equ $-m6
+    m7 db "And the numbers:",10d,13d
+    m7_len equ $-m7
+    m8 db "OR the numbers:",10d,13d
+    m8_len equ $-m8
+    m9 db "ExOR the of numbers:",10d,13d
+    m9_len equ $-m9
+    m10 db "Remainder:",10d,13d
+    m10_len equ $-m10
+    array dq 000000000000005h,000000000000005h
+    n equ 2
+section .bss
+    result resb 16
+    count resb 1
+    a resb 2  
+section .text
+        global _start:
+        _start:
+        scall 1,m2,m2_len
+        mov byte[count],02
+        xor rax,rax
+        mov rsi,array
+    back:mov al,[rsi]
+         push rsi
+         call display
+         pop rsi
+         add rsi,8
+         dec byte[count]
+         jnz back
+        up: scall 1,m0,m0_len
+            scall 1,menu,len
+            scall 1,m1,m1_len
+            scall 0,a,2
+
+        cmp byte[a],'1'
+        je case1
+        cmp byte[a],'2'
+        je case2
+        cmp byte[a],'3'
+        je case3
+        cmp byte[a],'4'
+        je case4
+        cmp byte[a],'5'
+        je case5
+        cmp byte[a],'6'
+        je case6
+        cmp byte[a],'7'
+        je case7
+        cmp byte[a],'8'
+        je case8
+
+
+
+        case1:scall 1,m3,m3_len
+              call addition
+              jmp up
+
+        case2:scall 1,m4,m4_len
+              call substraction
+              jmp up
+
+        case3:scall 1,m5,m5_len
+              call multiplication
+              jmp up
+
+        case4:scall 1,m6,m6_len
+             call division
+             jmp up
+             
+        case5:scall 1,m7,m7_len
+            call and
+            jmp up
+           
+        case6:scall 1,m8,m8_len
+             call or
+             jmp up
+        case7: scall 1,m9,m9_len
+             call xor
+             jmp up
+        case8:jmp exit
+
+addition:
+        mov rcx,n
+        dec rcx
+        mov rsi,array
+        mov rax,[rsi]
+add:    add rsi,8
+        mov rbx,[rsi]
+        add rax,rbx
+        loop add
+        call display
+        ret
+
+
+substraction:
+        mov rcx,n
+        dec rcx
+        mov rsi,array
+        mov rax,[rsi]
+sub:    add rsi,8
+        mov rbx,[rsi]
+        sub rax,rbx
+        loop sub
+        call display
+ret
+
+
+multiplication:
+        mov rcx,n
+        dec rcx
+        mov rsi,array
+        mov rax,[rsi]
+mult:   add rsi,8
+        mov rbx,[rsi]
+        mul rbx
+        loop mult
+        call display
+ret
+
+division:
+        mov rcx,n
+        dec rcx
+mov rdx,0
+        mov rsi,array
+        mov rax,[rsi]
+div:    add rsi,8
+        mov rbx,[rsi]
+        mov rdx,0
+        div rbx
+        loop div
+        call display
+        ;scall 1,m10,m10_len
+        mov al,dl
+        call display
+ret
+
+or:
+        mov rcx,n
+        dec rcx
+        mov rsi,array
+        mov rax,[rsi]
+up1:    add rsi,8
+        mov rbx,[rsi]
+        or rax,rbx
+        loop up1
+        call display
+ret
+
+xor:
+        mov rcx,n
+        dec rcx
+        mov rsi,array
+        mov rax,[rsi]
+up2:    add rsi,8
+        mov rbx,[rsi]
+        xor rax,rbx
+        loop up2
+        call display
+ret
+
+and:
+        mov rcx,n
+        dec rcx
+        mov rsi,array
+        mov rax,[rsi]
+up3:    add rsi,8
+        mov rbx,[rsi]
+        and rax,rbx
+        loop up3
+        call display
+ret
+
+exit:mov rax,60
+         mov rdi,0
+         syscall
+
+display:
+        mov rbx,rax
+        mov rbp,result
+        mov cx,16
+         c1: rol rbx,04H
+                mov al,bl
+        and al,0FH
+        cmp al,09H
+        Jbe a1
+        ADD al,07H
+       
+         a1:    ADD al,30H
+         b1:    mov [rbp],al
+          inc rbp
+          dec cx
+          JNZ c1
+          scall 1,result,16
+           scall 1,m0,m0_len
+          ret

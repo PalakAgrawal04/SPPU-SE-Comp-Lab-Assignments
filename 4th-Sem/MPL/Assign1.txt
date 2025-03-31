@@ -1,0 +1,58 @@
+Assign1
+section .data
+    ms1 db "Enter 5 nums in the array: ", 0xA,0xD
+    ms1len : equ $-ms1
+    ms2 db "The array is elements : ",0xA,0xD
+    ms2len : equ $-ms2
+section .bss
+	arr resd 200
+	counter resb 1
+
+section .text
+    global _start
+    _start:
+    	mov rax,1
+    	mov rdi,1
+    	mov rsi,ms1
+    	mov rdx,ms1len
+    	syscall
+    	
+    	mov byte[counter],5
+    	mov rbx,00
+    	
+    LOOP1:
+    	mov rax,0
+    	mov rdi,0
+    	mov rsi,arr
+    	add rsi,rbx
+    	mov rdx,17
+    	syscall
+    	
+		add rbx,17
+		dec byte[counter]
+		JNZ LOOP1
+		
+		mov rax,1
+		mov rdi,1
+		mov rsi,ms2
+		mov rdx,ms2len
+		syscall
+		
+		mov byte[counter],5
+		mov rbx,00
+		
+	LOOP2:
+		mov rax,1
+		mov rdi,1
+		mov rsi,arr
+		add rsi,rbx
+		mov rdx,17
+		syscall
+		
+		add rbx,17
+		dec byte[counter]
+		JNZ LOOP2
+		
+		mov rax,60
+		mov rdi,0
+		syscall

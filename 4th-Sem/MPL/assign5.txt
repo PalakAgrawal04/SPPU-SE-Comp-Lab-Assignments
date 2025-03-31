@@ -1,0 +1,102 @@
+assign5
+section .data
+	m1 db "Array elements are: ",10,13
+	l1 equ $-m1
+	
+	m2 db " Positive numbers: ",10,13
+	l2 equ $-m2
+	
+	m3 db " ",10,13
+	l3 equ $-m3
+	
+	m4 db " Negative numbers: ",10,13
+	l4 equ $-m4
+	
+       array dq -00000000000001h,-0000000000002h,00000000000003h,00000000000004h,00000000000005h
+section .bss
+	count resb 1
+	result resb 50
+	positive resb 1
+	negative resb 1
+	
+	%macro print 2
+	   mov rax,1
+	   mov rdi,1
+	   mov rsi,%1
+	   mov rdx,%2
+	   syscall
+	%endmacro   
+	
+	%macro read 2
+	   mov rax,0
+	   mov rdi,0
+	   mov rsi,%1
+	   mov rdx,%2
+	   syscall
+	%endmacro
+	
+	%macro exit 0
+	   mov rax,60
+	   mov rdi,0
+	   syscall
+	%endmacro   
+
+section .text
+global _start
+	_start:
+	print m1,l1
+	mov byte[count],05H
+	xor rax,rax
+	mov rsi,array
+back:	mov al,[rsi]
+	push rsi
+	call disp
+	pop rsi
+	add rsi,8
+	DEC byte[count]
+	JNZ back
+	print m3,l3
+	
+	mov byte[positive],00H
+	mov byte[negative],00H
+	mov byte[count],05H
+	mov rsi,array
+	mov al,00H
+loop1:	CMP al,[rsi]	;source is compared
+	Jg negi
+	inc byte[positive]
+	JMP go
+negi:   inc byte[negative]
+go:	add rsi,8
+	DEC byte[count]
+	JNZ loop1
+	
+	print m3,l3
+	print m2,l2
+	mov al,byte[positive]
+	call disp
+	print m3,l3
+	print m4,l4
+	mov al,byte[negative]
+	call disp
+	exit
+	
+disp:	mov rbx,rax
+       mov rbp,result
+	mov cx,16
+ c1:	rol rbx,04H
+        mov al,bl
+	and al,0FH
+	cmp al,09H
+	Jbe a1
+	ADD al,07H
+	;JMP b1
+ a1:    ADD al,30H
+ b1:    mov [rbp],al
+ 	inc rbp
+ 	dec cx
+ 	JNZ c1  
+ 	
+ 	print m3,l3
+	print result,16
+	RET

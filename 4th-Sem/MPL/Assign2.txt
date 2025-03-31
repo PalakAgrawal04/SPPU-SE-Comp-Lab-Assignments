@@ -1,0 +1,63 @@
+Assign2
+section .data
+msg1 db "Enter the string",10
+len1 equ $-msg1
+msg2 db "The length of string is",10
+len2 equ $-msg2
+
+section .bss
+string resb 100
+result resb 16
+
+section .text
+global _start
+_start:
+    MOV rax,1
+    MOV rdi,1
+    MOV rsi,msg1
+    MOV rdx,len1
+    syscall
+
+    MOV rax,0
+    MOV rdi,0
+    MOV rsi,string
+    MOV rdx,100
+    syscall
+
+    MOV rbx,rax
+    MOV rdi,result
+    MOV cx,16
+
+    disp_proc:
+    MOV rbp,result
+    MOV rcx,2
+    up:
+        rol bl,04
+        MOV dl,bl
+        and dl,0FH
+        cmp dl,09H
+        jbe nxt
+        add dl,07H
+    nxt:
+        add dl,30H
+        MOV [rbp],dl
+        inc rbp
+        dec cx
+        jnz up
+        
+    Mov rax,1
+    mov rdi,1
+    mov rsi,msg2
+    mov rdx,len2
+    syscall
+    
+    Mov rax,1
+    Mov rdi,1
+    Mov rsi,result
+    Mov rdx,100
+    syscall
+
+    exit:
+    MOV rax,60
+    MOV rdi,0
+    syscall

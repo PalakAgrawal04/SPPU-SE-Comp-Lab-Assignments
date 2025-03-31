@@ -1,0 +1,76 @@
+assign3
+%macro write 2
+MOV rax,1
+MOV rdi,1
+MOV rsi,%1
+MOV rdx,%2
+syscall
+%endmacro write
+
+section .data
+ array db 20H,30H,10H,40H,15H
+ msg1 db "The array elements are",10
+ len1 equ $-msg1
+ msg2 db "The largest number is",10
+ len2 equ $-msg2
+
+ section .bss
+ count resb 1
+ result resb 5
+
+ section .text
+ global _start
+ _start:
+
+ write msg1,len1
+mov byte[count],5
+mov rsi,array
+L1:	  
+    mov al,[rsi]
+	push rsi
+	call disp_proc
+	pop rsi
+	inc rsi
+	DEC byte[count]
+	JNZ L1
+
+    write msg2,len2
+    MOV byte[count],5
+    mov rsi,array
+
+L2:
+    cmp al,[rsi]
+    jg L3
+    mov al,[rsi]
+
+L3:
+ inc rsi
+ dec byte[count]
+ jnz L2
+ call disp_proc
+ 
+ exit:
+ MOV rax,60
+ MOV rdi,0
+ syscall
+
+
+ disp_proc:
+    MOV bl,al
+    MOV rbp,result
+    MOV rcx,2
+    up:
+    rol bl,04
+    MOV dl,bl
+    and dl,0FH
+    cmp dl,09H
+    jbe nxt
+    add dl,07H
+    nxt:
+    add dl,30H
+    MOV [rbp],dl
+    inc rbp
+    dec rcx
+    jnz up
+    write result,2
+    ret
